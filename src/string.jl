@@ -6,17 +6,14 @@ specified distance function.
 
 ### Fields
 * `U₀` - Initial string
-* `F!` - Driving force on the model written as an in place transform
 * `integrate!` - Algorithmic time stepper
 * `reparameterize!` - String reparametrization
 * `dist` - Distance function
-  ### Optional Fields
+### Optional Fields
 * `nmax = 100` - Maximum number of time steps
 * `τ = 1e-6` - Termination tolerance
-* `verbose = false` - Verbosity of output
 """
-
-function SimplifiedString(U₀, F!::TF, integrate!::TI, reparameterize!::TR, dist::TD; nmax=100, τ = 1e-6, verbose = false)
+function SimplifiedString(U₀, integrate!::TI, reparameterize!::TR, dist::TD; nmax=100, τ = 1e-6, verbose = false) where {TI, TR, TD}
     U = deepcopy(U₀);
     U_new = deepcopy(U);
 
@@ -26,7 +23,7 @@ function SimplifiedString(U₀, F!::TF, integrate!::TI, reparameterize!::TR, dis
 
     for n in 1:nmax
         # time stepping routine
-        integrate!.(U_new, F!);
+        integrate!.(U_new);
 
         # reparametrization step
         reparameterize!(U_new)
