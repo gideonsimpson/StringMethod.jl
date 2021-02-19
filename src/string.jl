@@ -1,5 +1,30 @@
+struct SimplifiedStringMethod{TGV, TI, TR, TD, TF<:AbstractFloat} <: AbstractStringMethod
+    ∇V!::TGV
+    integrate!::TI
+    reparameterize!::TR
+    dist::TD
+    Δt::TF
+
+    
 """
-`SimplifiedString`: Run the simplified string method for an energy landscape
+    SimplifiedStringMethod(∇V!, integrate!, reparameterize!, dist, Δt)
+
+Set up the Simplified String Method
+
+### Fields
+
+* ∇V!   - In place gradient of the potential
+* β     - Inverse temperature
+* γ     - Damping Coefficient
+* M     - Mass (either scalar or vector)
+* Δt    - Time step
+"""
+function SimplifiedStringMethod(∇V!::TGV, integrate!::TI, reparameterize!::TR, dist::TD,  Δt::TF) where {TGV, TI, TR, TD, TF<:AbstractFloat}
+    return SimplifiedStringMethod(∇V!, integrate!, reparameterize!, dist, Δt);
+end
+
+"""
+`simplified_string`: Run the simplified string method for an energy landscape
 with forcing term F = -∇E impelmented as in place transform with a user
 specified integrator and reparametrization.  Performance is checked with a user
 specified distance function.
@@ -13,7 +38,9 @@ specified distance function.
 * `nmax = 100` - Maximum number of time steps
 * `τ = 1e-6` - Termination tolerance
 """
-function SimplifiedString(U₀, integrate!::TI, reparameterize!::TR, dist::TD; nmax=100, τ = 1e-6, verbose = false) where {TI, TR, TD}
+function simplified_string(U₀, 
+    
+    integrate!::TI, reparameterize!::TR, dist::TD; nmax=100, τ = 1e-6, verbose = false) where {TI, TR, TD}
     U = deepcopy(U₀);
     U_new = deepcopy(U);
 

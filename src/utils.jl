@@ -23,7 +23,13 @@ a given number of images (inclusive).
 function linear_string(x₀, x₁, n_images)
     
     X = typeof(x₀)[];
+    x = similar(x₀);
 
+    for j in 0:n_images-1
+        t = Float64(j/(n_images-1));
+        @. x = (1. - t) * x₀ + t * x₁;
+        push!(X, copy(x));
+    end
     return X
 
 end

@@ -4,20 +4,23 @@ using LinearAlgebra
 using Dierckx
 using Printf
 
+# types
+include("types.jl")
+
 # utility functions
 include("utils.jl")
-export periodic_dist
+export periodic_dist, linear_string
 
 # integration routines
 include("integrate.jl")
-export stepRK4! 
+export stepEuler!, stepRK4! 
 
 # reparametrization routines
-include("reparametrize.jl")
+include("reparameterize.jl")
 export  spline_reparametrize!
 
 # string method routines
 include("string.jl")
-export SimplifiedString
+export simplified_string
 
 end #end module

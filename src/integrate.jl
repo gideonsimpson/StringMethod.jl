@@ -6,7 +6,7 @@
 * `f!` - Autonomous right hand side function, 
 * `Δt` - Time step
 """
-function stepRK4!(u, f!::TF, Δt) where {TF}
+function stepEuler!(u, f!::TF, Δt) where {TF}
     f = similar(u);
 
     f!(f, u);
