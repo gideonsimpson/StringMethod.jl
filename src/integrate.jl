@@ -3,14 +3,14 @@
 
 ### Fields
 * `u` - Initial state
-* `f!` - Autonomous right hand side function, 
+* `∇V!` - Gradient of energy
 * `Δt` - Time step
 """
-function stepEuler!(u, f!::TF, Δt) where {TF}
-    f = similar(u);
+function stepEuler!(u, ∇V!::TGV, Δt) where {TGV}
+    gradV = similar(u);
 
-    f!(f, u);
-    @. u = u + Δt *f;
+    ∇V!(gradV, u);
+    @. u = u - Δt * gradV;
 
     u
 end
@@ -20,22 +20,22 @@ end
 
 ### Fields
 * `u` - Initial state
-* `f!` - Autonomous right hand side function, 
+* `∇V!` - Gradient of energy
 * `Δt` - Time step
 """
-function stepRK4!(u, f!::TF, Δt) where {TF}
+function stepRK4!(u, ∇V!::TGV, Δt) where {TGV}
 
-    f1 = similar(u);
-    f2 = similar(u);
-    f3 = similar(u);
-    f4 = similar(u);
+    gradV1 = similar(u);
+    gradV2 = similar(u);
+    gradV3 = similar(u);
+    gradV4 = similar(u);
 
-    f!(f1, u);
-    f!(f2, u + 0.5 * Δt * f1);
-    f!(f3, u + 0.5 * Δt * f2);
-    f!(f4, u + Δt * f3);
+    ∇V!(gradV1, u);
+    ∇V!(gradV2, u - 0.5 * Δt * gradV1);
+    ∇V!(gradV3, u - 0.5 * Δt * gradV2);
+    ∇V!(gradV4, u - Δt * gradV3);
 
-    @. u = u + Δt/6 * (f1 + 2 * f2 + 2 * f3 + f4);
+    @. u = u - Δt/6 * (gradV1 + 2 * gradV2 + 2 * gradV3 + gradV4);
 
     u
 

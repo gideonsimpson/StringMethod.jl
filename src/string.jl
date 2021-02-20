@@ -1,11 +1,3 @@
-struct SimplifiedStringMethod{TGV, TI, TR, TD, TF<:AbstractFloat} <: AbstractStringMethod
-    ∇V!::TGV
-    integrate!::TI
-    reparameterize!::TR
-    dist::TD
-    Δt::TF
-
-    
 """
     SimplifiedStringMethod(∇V!, integrate!, reparameterize!, dist, Δt)
 
@@ -14,62 +6,107 @@ Set up the Simplified String Method
 ### Fields
 
 * ∇V!   - In place gradient of the potential
-* β     - Inverse temperature
-* γ     - Damping Coefficient
-* M     - Mass (either scalar or vector)
 * Δt    - Time step
 """
-function SimplifiedStringMethod(∇V!::TGV, integrate!::TI, reparameterize!::TR, dist::TD,  Δt::TF) where {TGV, TI, TR, TD, TF<:AbstractFloat}
-    return SimplifiedStringMethod(∇V!, integrate!, reparameterize!, dist, Δt);
+struct SimplifiedString{TGV, TI, TR, TD, TF<:AbstractFloat} <: SimplifiedStringMethod
+    ∇V!::TGV
+    integrate!::TI
+    reparameterize!::TR
+    dist::TD
+    Δt::TF
 end
 
 """
-`simplified_string`: Run the simplified string method for an energy landscape
+`simplified_string!`: Run the simplified string method for an energy landscape
 with forcing term F = -∇E impelmented as in place transform with a user
 specified integrator and reparametrization.  Performance is checked with a user
 specified distance function.
 
 ### Fields
-* `U₀` - Initial string
-* `integrate!` - Algorithmic time stepper
-* `reparameterize!` - String reparametrization
-* `dist` - Distance function
+* `U` - Initial string
+* `S` - Simplified string data structure
 ### Optional Fields
 * `nmax = 100` - Maximum number of time steps
 * `τ = 1e-6` - Termination tolerance
 """
-function simplified_string(U₀, 
-    
-    integrate!::TI, reparameterize!::TR, dist::TD; nmax=100, τ = 1e-6, verbose = false) where {TI, TR, TD}
-    U = deepcopy(U₀);
+function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: SimplifiedString}
+    U = deepcopy(U₀)
+    U_new = deepcopy(U);
+
+    U_trajectory = typeof(U)[deepcopy(U)];
+
+    n_images = length(U);
+    Δs = 1/(n_images-1);
+    err_est = 0.;
+
+    for n in 1:options.nmax
+        # time stepping routine
+        S.integrate!.(U_new, S.∇V!, S.Δt);
+        # reparametrization step
+        S.reparameterize!(U_new, S.dist)
+
+        err_est = maximum([S.dist(U_new[i], U[i]) for i in 1:n_images])/S.Δt;
+        if(options.verbose)
+            @printf("[%d]: error = %g\n", n, err_est);
+        end
+
+        copy!.(U, U_new);
+        if(options.save_trajectory)
+            push!(U_trajectory, deepcopy(U));
+        end
+        if (err_est< options.tol)
+            if(!options.save_trajectory)
+                push!(U_trajectory, deepcopy(U));
+            end
+            break
+        end
+    end
+
+    if(err_est >= options.tol)
+        @printf("ERROR: Did not converge after %d iterartions", nmax)
+    end
+    return U_trajectory
+end
+
+"""
+`simplified_string!`: Run the simplified string method for an energy landscape
+with forcing term F = -∇E impelmented as in place transform with a user
+specified integrator and reparametrization.  Performance is checked with a user
+specified distance function.
+
+### Fields
+* `U` - Initial string
+* `S` - Simplified string data structure
+### Optional Fields
+* `nmax = 100` - Maximum number of time steps
+* `τ = 1e-6` - Termination tolerance
+"""
+function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: SimplifiedString}
     U_new = deepcopy(U);
 
     n_images = length(U);
     Δs = 1/(n_images-1);
     err_est = 0.;
 
-    for n in 1:nmax
+    for n in 1:options.nmax
         # time stepping routine
-        integrate!.(U_new);
-
+        S.integrate!.(U_new, S.∇V!, S.Δt);
         # reparametrization step
-        reparameterize!(U_new)
+        S.reparameterize!(U_new, S.dist)
 
-        err_est = maximum([norm(dist.(U_new[i], U[i])) for i in 1:n_images])/Δt;
-        if(verbose)
+        err_est = maximum([S.dist(U_new[i], U[i]) for i in 1:n_images])/S.Δt;
+        if(options.verbose)
             @printf("[%d]: error = %g\n", n, err_est);
         end
 
         copy!.(U, U_new);
-        if (err_est< τ)
+        if (err_est< options.tol)
             break
         end
     end
 
-    if(err_est >= τ)
+    if(err_est >= options.tol)
         @printf("ERROR: Did not converge after %d iterartions", nmax)
     end
-
-    return U
-
+    U
 end

@@ -1,3 +1,18 @@
+struct StringOptions
+        nmax::Int
+        tol::Float64
+        verbose::Bool
+        save_trajectory::Bool
+end
+
+"""
+    StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_evolution = true)
+"""
+function StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_trajectory = true)
+    return StringOptions(nmax, tol, verbose, save_trajectory)
+end
+
+
 """
 `periodic_dist`: Compute the periodic distance between values
 

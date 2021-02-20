@@ -9,7 +9,7 @@ include("types.jl")
 
 # utility functions
 include("utils.jl")
-export periodic_dist, linear_string
+export StringOptions, periodic_dist, linear_string
 
 # integration routines
 include("integrate.jl")
@@ -21,6 +21,6 @@ export  spline_reparametrize!
 
 # string method routines
 include("string.jl")
-export simplified_string
+export SimplifiedString, simplified_string
 
 end #end module
