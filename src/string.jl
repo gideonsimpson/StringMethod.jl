@@ -63,7 +63,7 @@ function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: Si
     end
 
     if(err_est >= options.tol)
-        @printf("ERROR: Did not converge after %d iterartions", nmax)
+        @printf("ERROR: Did not converge after %d iterartions", options.nmax)
     end
     return U_trajectory
 end
