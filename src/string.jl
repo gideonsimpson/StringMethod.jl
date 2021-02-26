@@ -106,7 +106,7 @@ function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: Simp
     end
 
     if(err_est >= options.tol)
-        @printf("ERROR: Did not converge after %d iterartions", nmax)
+        @printf("ERROR: Did not converge after %d iterartions", options.nmax)
     end
     U
 end
