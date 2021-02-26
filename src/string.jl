@@ -48,7 +48,7 @@ function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: Si
             S.integrate!.(U_new, S.∇V!, S.Δt);
         end
         # reparametrization step
-        S.reparameterize!(U_new, S.dist)
+        S.reparameterize!(U_new, S.dist, S.pin)
 
         err_est = maximum([S.dist(U_new[i], U[i]) for i in 1:n_images])/S.Δt;
         if(options.verbose)
@@ -101,7 +101,7 @@ function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: Simp
             S.integrate!.(U_new, S.∇V!, S.Δt);
         end
         # reparametrization step
-        S.reparameterize!(U_new, S.dist)
+        S.reparameterize!(U_new, S.dist, S.pin)
 
         err_est = maximum([S.dist(U_new[i], U[i]) for i in 1:n_images])/S.Δt;
         if(options.verbose)
