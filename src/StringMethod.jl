@@ -21,6 +21,6 @@ export  spline_reparametrize!
 
 # string method routines
 include("string.jl")
-export SimplifiedString, simplified_string
+export simplified_string, simplified_string!
 
 end #end module
