@@ -51,7 +51,7 @@ function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: Si
         S.reparameterize!(U_new, S.dist, S.pin)
 
         err_est = maximum([S.dist(U_new[i], U[i]) for i in 1:n_images])/S.Δt;
-        if(options.verbose)
+        if(options.verbose && mod(n, options.print_iters)==0)
             @printf("[%d]: error = %g\n", n, err_est);
         end
 
@@ -104,7 +104,7 @@ function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: Simp
         S.reparameterize!(U_new, S.dist, S.pin)
 
         err_est = maximum([S.dist(U_new[i], U[i]) for i in 1:n_images])/S.Δt;
-        if(options.verbose)
+        if(options.verbose && mod(n, options.print_iters)==0)
             @printf("[%d]: error = %g\n", n, err_est);
         end
 

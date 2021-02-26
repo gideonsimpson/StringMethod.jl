@@ -3,13 +3,14 @@ struct StringOptions
         tol::Float64
         verbose::Bool
         save_trajectory::Bool
+        print_iters::Int
 end
 
 """
     StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_evolution = true)
 """
-function StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_trajectory = true)
-    return StringOptions(nmax, tol, verbose, save_trajectory)
+function StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_trajectory = true, print_iters = 10^3)
+    return StringOptions(nmax, tol, verbose, save_trajectory, print_iters)
 end
 
 
