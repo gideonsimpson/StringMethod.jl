@@ -8,11 +8,12 @@ Set up the Simplified String Method
 * ∇V!   - In place gradient of the potential
 * Δt    - Time step
 """
-struct SimplifiedString{TGV, TI, TR, TD, TF<:AbstractFloat} <: SimplifiedStringMethod
+struct SimplifiedString{TGV, TI, TR, TD, TP<:Bool, TF<:AbstractFloat} <: SimplifiedStringMethod
     ∇V!::TGV
     integrate!::TI
     reparameterize!::TR
     dist::TD
+    pin::TP
     Δt::TF
 end
 
@@ -41,7 +42,11 @@ function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: Si
 
     for n in 1:options.nmax
         # time stepping routine
-        S.integrate!.(U_new, S.∇V!, S.Δt);
+        if S.pin
+            S.integrate!.(U_new[2:end-1], S.∇V!, S.Δt);
+        else
+            S.integrate!.(U_new, S.∇V!, S.Δt);
+        end
         # reparametrization step
         S.reparameterize!(U_new, S.dist)
 
@@ -90,7 +95,11 @@ function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: Simp
 
     for n in 1:options.nmax
         # time stepping routine
-        S.integrate!.(U_new, S.∇V!, S.Δt);
+        if S.pin
+            S.integrate!.(U_new[2:end-1], S.∇V!, S.Δt);
+        else
+            S.integrate!.(U_new, S.∇V!, S.Δt);
+        end
         # reparametrization step
         S.reparameterize!(U_new, S.dist)
 
