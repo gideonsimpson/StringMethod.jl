@@ -13,6 +13,19 @@ function StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_trajector
     return StringOptions(nmax, tol, verbose, save_trajectory, print_iters)
 end
 
+struct SaddleOptions
+        nmax::Int
+        tol::Float64
+        verbose::Bool
+        save_trajectory::Bool
+        print_iters::Int
+end
+"""
+    SaddleOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_trajectory = true, print_iters = 10^3)
+"""
+function SaddleOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_trajectory = true, print_iters = 10^3)
+    return SaddleOptions(nmax, tol, verbose, save_trajectory, print_iters)
+end
 
 """
 `periodic_dist`: Compute the periodic distance between values
@@ -48,4 +61,26 @@ function linear_string(x₀, x₁, n_images)
     end
     return X
 
+end
+
+"""
+`upwind_tangent` - Estimate the tangent vector from a string's interior using
+an upwinding method
+
+### Fields
+* `U` - Array of three images, in sequence, along the string
+* `V` - Potential energy defining the landscape
+"""
+
+function upwind_tangent(U, V)
+    V_vals = V.(U);
+    if (V_vals[1]<V_vals[2] && V_vals[2]< V_vals[3])
+        τ = (U[3] .- U[2])/norm(U[3] .- U[2]);
+    elseif (V_vals[1]>V_vals[2] && V_vals[2]> V_vals[3])
+        τ = (U[2] .- U[1])/norm(U[2] .- U[1]);
+    else
+        τ = (U[3] .- U[1])/norm(U[3] .- U[1]);
+    end
+
+    return τ
 end

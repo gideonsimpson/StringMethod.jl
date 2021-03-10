@@ -9,7 +9,7 @@ include("types.jl")
 
 # utility functions
 include("utils.jl")
-export StringOptions, periodic_dist, linear_string
+export StringOptions, SaddleOptions, periodic_dist, linear_string, upwind_tangent
 
 # integration routines
 include("integrate.jl")
@@ -23,4 +23,7 @@ export  spline_reparametrize!
 include("string.jl")
 export SimplifiedString, simplified_string, simplified_string!
 
+# saddle point method routines
+include("saddle.jl")
+export ClimbingImage, climbing_image, climbing_image!
 end #end module
