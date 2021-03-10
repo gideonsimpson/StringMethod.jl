@@ -1,5 +1,5 @@
 """
-    SimplifiedStringMethod(∇V!, integrate!, reparameterize!, dist, Δt)
+    SimplifiedString(∇V!, integrate!, reparameterize!, dist, Δt)
 
 Set up the Simplified String Method
 
