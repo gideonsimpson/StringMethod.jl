@@ -1,12 +1,15 @@
 """
-    SimplifiedString(∇V!, integrate!, reparameterize!, dist, Δt)
-
-Set up the Simplified String Method
+`SimplifiedString(∇V!, integrate!, reparameterize!, dist, Δt)` -  Set up the
+simplified string method data structure
 
 ### Fields
 
-* ∇V!   - In place gradient of the potential
-* Δt    - Time step
+* `∇V!`   - In place gradient of the potential
+* `integrate!` - Integrator for ẋ = - ∇V(x)
+* `reparameterize!` - Choice of reparametrization
+* `dist` - Distance function used in reparametrization and convergence testing
+* `pin` - Boolean for pinning the endpoints of hte string
+* `Δt`    - Time step for the integrator
 """
 struct SimplifiedString{TGV, TI, TR, TD, TP<:Bool, TF<:AbstractFloat} <: SimplifiedStringMethod
     ∇V!::TGV
@@ -18,17 +21,15 @@ struct SimplifiedString{TGV, TI, TR, TD, TP<:Bool, TF<:AbstractFloat} <: Simplif
 end
 
 """
-`simplified_string!`: Run the simplified string method for an energy landscape
-with forcing term F = -∇E impelmented as in place transform with a user
-specified integrator and reparametrization.  Performance is checked with a user
-specified distance function.
+`simplified_string` - Run the simplified string method for an energy landscape
+set up with the `SimplifiedString` data structure.  This can return the entire
+string evolution.
 
 ### Fields
 * `U` - Initial string
 * `S` - Simplified string data structure
-### Optional Fields
-* `nmax = 100` - Maximum number of time steps
-* `τ = 1e-6` - Termination tolerance
+  ### Optional Fields
+* `options` - String method options
 """
 function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: SimplifiedString}
     U = deepcopy(U₀)
@@ -74,17 +75,14 @@ function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: Si
 end
 
 """
-`simplified_string!`: Run the simplified string method for an energy landscape
-with forcing term F = -∇E impelmented as in place transform with a user
-specified integrator and reparametrization.  Performance is checked with a user
-specified distance function.
+`simplified_string!` - Run the simplified string method for an energy landscape
+set up with the `SimplifiedString` data structure.  This is an in place transform.
 
 ### Fields
 * `U` - Initial string
 * `S` - Simplified string data structure
-### Optional Fields
-* `nmax = 100` - Maximum number of time steps
-* `τ = 1e-6` - Termination tolerance
+  ### Optional Fields
+* `options` - String method options
 """
 function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: SimplifiedString}
     U_new = deepcopy(U);
