@@ -43,10 +43,16 @@ function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: Si
 
     for n in 1:options.nmax
         # time stepping routine
+
+
         if S.pin
-            S.integrate!.(U_new[2:end-1], S.∇V!, S.Δt);
+            Threads.@threads for j in 2:n_images-1
+                S.integrate!(U_new[j], S.∇V!, S.Δt);
+            end
         else
-            S.integrate!.(U_new, S.∇V!, S.Δt);
+            Threads.@threads for j in 1:n_images
+                S.integrate!(U_new[j], S.∇V!, S.Δt);
+            end
         end
         # reparametrization step
         S.reparameterize!(U_new, S.dist, S.pin)
@@ -94,9 +100,13 @@ function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: Simp
     for n in 1:options.nmax
         # time stepping routine
         if S.pin
-            S.integrate!.(U_new[2:end-1], S.∇V!, S.Δt);
+            Threads.@threads for j in 2:n_images-1
+                S.integrate!(U_new[j], S.∇V!, S.Δt);
+            end
         else
-            S.integrate!.(U_new, S.∇V!, S.Δt);
+            Threads.@threads for j in 1:n_images
+                S.integrate!(U_new[j], S.∇V!, S.Δt);
+            end
         end
         # reparametrization step
         S.reparameterize!(U_new, S.dist, S.pin)
