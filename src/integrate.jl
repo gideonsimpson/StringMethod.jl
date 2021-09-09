@@ -7,7 +7,8 @@
 * `Δt` - Time step
 """
 function stepEuler!(u, ∇V::TGV, Δt) where {TGV}
-    u .= u - Δt * ∇V(u);
+    gradV = ∇V(u);
+    @. u = u - Δt *gradV;
 
     u
 end
@@ -46,7 +47,8 @@ function stepPCEuler!(u, ∇V::TGV, P::TP, Δt) where {TGV, TP}
     
     gradV = ∇V(u);
     Pu = P(u);
-    u .= u - Δt * Pu\gradV;
+    s = Pu\gradV;
+    @. u = u - Δt * Δu;
 
     u
 end
