@@ -1,7 +1,7 @@
 name = "StringMethod"
 uuid = "e62e6a7e-3b2b-4391-b20a-030a7103b929"
 authors = ["Gideon Simpson <gideon.simpson@gmail.com>"]
-version = "0.2.2"
+version = "0.2.3"
 
 [deps]
 Dierckx = "39dd38d3-220a-591b-8e3c-4c3a8c710a94"

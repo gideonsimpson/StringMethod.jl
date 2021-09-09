@@ -7,7 +7,7 @@
 * `Δt` - Time step
 """
 function stepEuler!(u, ∇V::TGV, Δt) where {TGV}
-    @. u = u - Δt * ∇V(u);
+    u .= u - Δt * ∇V(u);
 
     u
 end
