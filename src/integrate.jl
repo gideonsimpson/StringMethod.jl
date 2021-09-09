@@ -46,7 +46,7 @@ function stepPCEuler!(u, ∇V::TGV, P::TP, Δt) where {TGV, TP}
     
     gradV = ∇V(u);
     Pu = P(u);
-    @. u = u - Δt * Pu\gradV;
+    u .= u - Δt * Pu\gradV;
 
     u
 end
