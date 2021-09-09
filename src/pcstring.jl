@@ -1,18 +1,20 @@
 """
-`SimplifiedString(∇V, integrate!, reparameterize!, dist, Δt)` -  Set up the
-simplified string method data structure
+`PCSimplifiedString(∇V, P,  integrate!, reparameterize!, dist, Δt)` -  Set up the
+simplified string method data structure with preconditioning
 
 ### Fields
 
 * `∇V`   - Gradient of the potential
+* `P` - Preconditioner
 * `integrate!` - Integrator for ẋ = - ∇V(x)
 * `reparameterize!` - Choice of reparametrization
 * `dist` - Distance function used in reparametrization and convergence testing
 * `pin` - Boolean for pinning the endpoints of hte string
 * `Δt`    - Time step for the integrator
 """
-struct SimplifiedString{TGV, TI, TR, TD, TP<:Bool, TF<:AbstractFloat} <: SimplifiedStringMethod
+struct PCSimplifiedString{TGV, TPR, TI, TR, TD, TP<:Bool, TF<:AbstractFloat} <: SimplifiedStringMethod
     ∇V::TGV
+    P::TPR
     integrate!::TI
     reparameterize!::TR
     dist::TD
@@ -31,7 +33,7 @@ string evolution.
   ### Optional Fields
 * `options` - String method options
 """
-function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: SimplifiedString}
+function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: PCSimplifiedString}
     U = deepcopy(U₀)
     U_new = deepcopy(U);
 
@@ -47,11 +49,11 @@ function simplified_string(U₀, S::TS; options=StringOptions()) where {TS <: Si
 
         if S.pin
             Threads.@threads for j in 2:n_images-1
-                S.integrate!(U_new[j], S.∇V, S.Δt);
+                S.integrate!(U_new[j], S.∇V, S.P, S.Δt);
             end
         else
             Threads.@threads for j in 1:n_images
-                S.integrate!(U_new[j], S.∇V, S.Δt);
+                S.integrate!(U_new[j], S.∇V, S.P, S.Δt);
             end
         end
         # reparametrization step
@@ -90,7 +92,7 @@ set up with the `SimplifiedString` data structure.  This is an in place transfor
   ### Optional Fields
 * `options` - String method options
 """
-function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: SimplifiedString}
+function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: PCSimplifiedString}
     U_new = deepcopy(U);
 
     n_images = length(U);
@@ -101,11 +103,11 @@ function simplified_string!(U, S::TS; options=StringOptions()) where {TS <: Simp
         # time stepping routine
         if S.pin
             Threads.@threads for j in 2:n_images-1
-                S.integrate!(U_new[j], S.∇V, S.Δt);
+                S.integrate!(U_new[j], S.∇V, S.P, S.Δt);
             end
         else
             Threads.@threads for j in 1:n_images
-                S.integrate!(U_new[j], S.∇V, S.Δt);
+                S.integrate!(U_new[j], S.∇V, S.P, S.Δt);
             end
         end
         # reparametrization step

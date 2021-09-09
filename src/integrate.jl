@@ -3,14 +3,11 @@
 
 ### Fields
 * `u` - Initial state
-* `∇V!` - Gradient of energy
+* `∇V` - Gradient of energy
 * `Δt` - Time step
 """
-function stepEuler!(u, ∇V!::TGV, Δt) where {TGV}
-    gradV = similar(u);
-
-    ∇V!(gradV, u);
-    @. u = u - Δt * gradV;
+function stepEuler!(u, ∇V::TGV, Δt) where {TGV}
+    @. u = u - Δt * ∇V(u);
 
     u
 end
@@ -20,23 +17,36 @@ end
 
 ### Fields
 * `u` - Initial state
-* `∇V!` - Gradient of energy
+* `∇V` - Gradient of energy
 * `Δt` - Time step
 """
-function stepRK4!(u, ∇V!::TGV, Δt) where {TGV}
+function stepRK4!(u, ∇V::TGV, Δt) where {TGV}
 
-    gradV1 = similar(u);
-    gradV2 = similar(u);
-    gradV3 = similar(u);
-    gradV4 = similar(u);
-
-    ∇V!(gradV1, u);
-    ∇V!(gradV2, u - 0.5 * Δt * gradV1);
-    ∇V!(gradV3, u - 0.5 * Δt * gradV2);
-    ∇V!(gradV4, u - Δt * gradV3);
+    gradV1 = ∇V(u);
+    gradV2 = ∇V(u - 0.5 * Δt * gradV1);
+    gradV3 = ∇V(u - 0.5 * Δt * gradV2);
+    gradV4 = ∇V(u - Δt * gradV3);
 
     @. u = u - Δt/6 * (gradV1 + 2 * gradV2 + 2 * gradV3 + gradV4);
 
     u
 
+end
+
+"""
+`stepPCEuler!`: Perform an in place Euler step with preconditioning
+
+### Fields
+* `u` - Initial state
+* `∇V` - Gradient of energy
+* `P` - Preconditioner
+* `Δt` - Time step
+"""
+function stepPCEuler!(u, ∇V::TGV, P::TP, Δt) where {TGV, TP}
+    
+    gradV = ∇V(u);
+    Pu = P(u);
+    @. u = u - Δt * Pu\gradV;
+
+    u
 end

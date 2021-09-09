@@ -21,7 +21,8 @@ export  spline_reparametrize!
 
 # string method routines
 include("string.jl")
-export SimplifiedString, simplified_string, simplified_string!
+include("pcstring.jl")
+export SimplifiedString, PCSimplifiedString, simplified_string, simplified_string!
 
 # saddle point method routines
 include("saddle.jl")
