@@ -13,7 +13,7 @@ export StringOptions, SaddleOptions, periodic_dist, linear_string, upwind_tangen
 
 # integration routines
 include("integrate.jl")
-export stepEuler!, stepRK4! 
+export stepEuler!, stepRK4!, stepPCEuler!
 
 # reparametrization routines
 include("reparameterize.jl")
