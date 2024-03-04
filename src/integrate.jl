@@ -1,5 +1,5 @@
 """
-`stepEuler!`: Perform an in place Euler step
+`stepEuler!(u, ∇V, Δt)`: Perform an in place Euler step
 
 ### Fields
 * `u` - Initial state
@@ -14,7 +14,7 @@ function stepEuler!(u, ∇V::TGV, Δt) where {TGV}
 end
 
 """
-`stepRK4!`: Perform an in place RK4 step
+`stepRK4!(u, ∇V, Δt)`: Perform an in place RK4 step
 
 ### Fields
 * `u` - Initial state

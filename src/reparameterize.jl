@@ -1,6 +1,6 @@
 """
-`spline_reparametrize`: Reparametrize a string of points with a specified
-distance function using cubic spline interpolation
+`spline_reparametrize!(U, dist, pin)` - Reparametrize a string of points with a
+specified distance function using cubic spline interpolation
 """
 function spline_reparametrize!(U, dist::TD, pin::Bool) where {TD}
     n_images = length(U);

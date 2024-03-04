@@ -7,7 +7,14 @@ struct StringOptions
 end
 
 """
-    StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_evolution = true)
+`StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_evolution = true)` - Set string method solver options
+
+### Fields
+* `nmax = 10^3` - maximum number of solver iterations
+* `tol = 1e-6` - stopping tolerance
+* `verbose = false` - print diagnostic and convergence information 
+* `save_trajectory = true` - save the entire string at each algorithmic step
+* `print_iters = 10^3` - print diagonstic information at this frequency
 """
 function StringOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_trajectory = true, print_iters = 10^3)
     return StringOptions(nmax, tol, verbose, save_trajectory, print_iters)
