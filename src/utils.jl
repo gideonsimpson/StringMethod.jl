@@ -28,7 +28,7 @@ function SaddleOptions(;nmax = 10^3, tol = 1e-6, verbose = false, save_trajector
 end
 
 """
-`periodic_dist`: Compute the periodic distance between values
+`periodic_dist(u,v)`: Compute the periodic distance between values
 
 ### Fields
 * `u` - First point on the periodic interval
@@ -41,8 +41,8 @@ function periodic_dist(u,v; Π = 1.0)
 end
 
 """
-`linear_string` - Construct the linear interpolant string between x₀ and x₁ with
-a given number of images (inclusive).
+`linear_string(x₀, x₁, n_images)` - Construct the linear interpolant string
+between x₀ and x₁ with a given number of images (inclusive).
 
 ### Fields
 * `x₀` - Initial image on the string
@@ -64,8 +64,8 @@ function linear_string(x₀, x₁, n_images)
 end
 
 """
-`upwind_tangent` - Estimate the tangent vector from a string's interior using
-an upwinding method
+`upwind_tangent(U, V)` - Estimate the tangent vector from a string's interior
+using an upwinding method.
 
 ### Fields
 * `U` - Array of three images, in sequence, along the string
