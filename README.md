@@ -1,4 +1,8 @@
 # StringMethod.jl
+
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://gideonsimpson.github.io/StringMethod.jl/dev)
+
+
 Julia implementation of the String Method for computing transition paths and
 saddle points on energy landscapes.  This also implements the Climbing image
 method.
