@@ -1,7 +1,7 @@
 module StringMethod
 
 using LinearAlgebra
-using Dierckx
+using DataInterpolations
 using Printf
 
 # types

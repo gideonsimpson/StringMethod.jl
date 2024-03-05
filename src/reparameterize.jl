@@ -20,7 +20,7 @@ function spline_reparametrize!(U, dist::TD, pin::Bool) where {TD}
     # interpolate back onto the uniform mesh
     for j in 1:d
         # Construct spline through the j-th image
-        spl = Spline1D(s, [U[i][j] for i in 1:n_images], k=3);
+        spl = CubicSpline([U[i][j] for i in 1:n_images], s)
         u_spl = spl(s_ref);
         # Interpolate the j-th image
         for i in 2:n_images-1

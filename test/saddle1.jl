@@ -7,6 +7,6 @@ opts = SaddleOptions(verbose=true, save_trajectory=false)
 
 saddle_trajectory = climbing_image(U[max_idx], climb, options=opts)
 
-saddle_pt = [-0.8220015599478452, 0.6243128012695873];
+saddle_pt = [-0.8220015599478441, 0.6243128012695888];
 
 norm(saddle_trajectory[end] - saddle_pt) ≈ 0.0
