@@ -28,11 +28,13 @@ function ClimbingImage(∇V::TGV, τ::TT, integrate!::TI, Δt::TF) where{TGV, TT
 end
 
 """
-`climbing_image`: Run the climbing image method...
+`climbing_image(u₀, C; options=SaddleOptions())`: Run the climbing image method
+
 ### Fields
-* `u` - Initial guess for saddle
+* `u₀` - Initial guess for saddle
 * `C` - Climbing image data structure
 ### Optional Fields
+* `options` - String method options
 """
 function climbing_image(u₀, C::TC; options=SaddleOptions()) where {TC <: ClimbingImage}
     u = copy(u₀);

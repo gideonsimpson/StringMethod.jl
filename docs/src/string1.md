@@ -14,7 +14,7 @@ Recall that in the string method, one seeks to find a mapping function
 where $x_\pm$ are initial and terminal points which often (but not always)
 correspond to local minima on the energy landscape.  While many such ``\varphi``
 are possible, the string method identifies a _minimum energy path_ accomplishing
-this transition. 
+this transition.  Here, we implement the (simplified and improved) string method, as described in E, Ren, and Vanden-Eijnden (2007).
 
 ## Initialize String
 To apply the string method, we must first initialize the string, which is to
@@ -77,6 +77,12 @@ In addition to the string method options, we also have the numerical options ass
 StringOptions
 ```
 
+## Solve
+Having set everything, we execute
+```@docs
+simplified_string
+```
+
 ## Example
 The following example applies the string method to the Muller (sometimes Muller-Brown) potential, a 2D energy landscape often used to demonstrate algorithms.  Muller-Brown is coded in the `TestLandscapes.jl` package.
 ```@example
@@ -85,16 +91,17 @@ using LinearAlgebra
 using StringMethod
 using TestLandscapes
 using ForwardDiff
+using Printf
 using Plots
 
 # set potential and get its gradient
 V = x -> Muller(x);
 ∇V = x -> ForwardDiff.gradient(V, x);
 
-U0 = linear_string([0, -0.25], [0, 1.5], 101)
+U0 = linear_string([0, -0.25], [0, 1.5], 15)
 
 Δt = 1e-4;
-dist = (u, v) -> norm(u .- v, 2);
+dist = (u, v) -> norm(u - v, 2);
 pin = false;
 
 string = SimplifiedString(∇V, stepRK4!, spline_reparametrize!, dist, pin, Δt);
@@ -104,15 +111,20 @@ opts = StringOptions(verbose=false, save_trajectory=true)
 U_trajectory = simplified_string(U0, string, options=opts);
 
 # visualize
-xx =LinRange(-1.5, 1.5,250)
-yy = LinRange(-0.5, 2.0,250)
+xx =LinRange(-1.5, 1.5,150);
+yy = LinRange(-0.5, 2.0,150);
 V_vals = [V([x,y]) for y in yy, x in xx];
-contour(xx,yy,min.(V_vals,500),
-    levels = LinRange(-150,500,50),color=:viridis,cbar=:none)
-xlabel!("x")
-ylabel!("y")
-plot!([u_[1] for u_ in U_trajectory[1]], [u_[2] for u_ in U_trajectory[1]], 
-    label="Initial String", lw =2)
-plot!([u_[1] for u_ in U_trajectory[end]], [u_[2] for u_ in U_trajectory[end]], 
-    label="Final String", lw =2)
+
+anim =@animate for i in 1:10:length(U_trajectory)
+    plt = contour(xx,yy,min.(V_vals,500),
+        levels = LinRange(-150,500,50),color=:viridis,colorbar_title="V")
+    scatter!(plt, [x_[1] for x_ in U_trajectory[i]],  
+        [x_[2] for x_ in U_trajectory[i]],color=:red, label="String")
+    xlabel!("x")
+    ylabel!("y")
+
+    title!(plt, @sprintf("Iteration %d", i-1))
+end
+gif(anim, fps=15)
+
 ```
