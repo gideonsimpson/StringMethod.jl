@@ -1,7 +1,7 @@
 name = "StringMethod"
 uuid = "e62e6a7e-3b2b-4391-b20a-030a7103b929"
 authors = ["Gideon Simpson <gideon.simpson@gmail.com>"]
-version = "0.2.6"
+version = "0.3.0"
 
 [deps]
 DataInterpolations = "82cc6244-b520-54b8-b5a6-8a565e85f1d0"
