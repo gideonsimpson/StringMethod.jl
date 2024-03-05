@@ -1,7 +1,7 @@
 #push!(LOAD_PATH, "../src/")
 using Documenter
 using Pkg
-Pkg.develop(path="../../StringMethod.jl/")
+#Pkg.develop(path="../../StringMethod.jl/")
 using StringMethod
 makedocs(checkdocs=:none,
     sitename="StringMethod.jl",
