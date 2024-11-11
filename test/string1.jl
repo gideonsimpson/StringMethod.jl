@@ -8,10 +8,10 @@ dist = (u, v) -> norm(u-v, 2);
 pin = false;
 
 string = SimplifiedString(∇V, stepRK4!, spline_reparametrize!, dist, pin, Δt);
-opts = StringOptions(verbose=true, save_trajectory=false)
+opts = StringOptions(verbose=true, save_trajectory=false, tol=1e-8)
 
 U_trajectory = simplified_string(U0, string, options=opts);
 
 mid_pt = [-0.5352369130791, 0.5051729517334016]; # precomputed
 
-norm(U_trajectory[end][51] - mid_pt) ≈ 0.0
+norm(U_trajectory[end][51] - mid_pt) < 1e-8
