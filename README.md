@@ -1,6 +1,6 @@
 # StringMethod.jl
 
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://gideonsimpson.github.io/StringMethod.jl/dev)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://gideonsimpson.github.io/StringMethod.jl/stable)[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://gideonsimpson.github.io/StringMethod.jl/dev)
 
 
 Julia implementation of the String Method for computing transition paths and
