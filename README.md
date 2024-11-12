@@ -5,7 +5,7 @@
 
 Julia implementation of the String Method for computing transition paths and
 saddle points on energy landscapes.  This also implements the Climbing Image
-Method.
+Method for refining estimates of the saddle points.
 
 This currently only implements the simplified string method as developed in E,
 Ren, and Vanden-Eijnden (2007).  These are but two method amongst many for
