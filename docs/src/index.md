@@ -1,6 +1,6 @@
 # StringMethod.jl Documentation
 The (simplified and improve) string method and climbing image method as
-formulated in  E, Ren, and Vanden-Eijnden (2007).
+formulated in  E, Ren, and Vanden-Eijnden (2007). 
 
 ## Acknowledgements
 This work was supported in part by the US National Science Foundation Grants
